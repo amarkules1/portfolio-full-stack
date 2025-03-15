@@ -1,0 +1,6 @@
+/.venv/
+/.idea/
+*.env
+*.db
+*.pem
+texas-holdem-dashboard.txt

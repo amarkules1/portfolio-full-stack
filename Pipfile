@@ -1,0 +1,28 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+pandas = "==1.5.3"
+numpy = "==1.24.1"
+flask = "==2.2.2"
+python-dateutil = "==2.8.2"
+waitress = "*"
+flask-cors = "*"
+scipy = "*"
+python-dotenv = "*"
+twine = "*"
+texas-hold-em-utils = "==0.1.14"
+werkzeug = "==2.2.2"
+sqlalchemy = "==2.0.1"
+greenlet = "*"
+gunicorn = "*"
+pytest = "*"
+psycopg2 = "*"
+cachetools = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.11"
