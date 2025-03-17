@@ -14,9 +14,8 @@ app = Flask(__name__, static_folder='portfolio/build', static_url_path='')
 CORS(app)
 
 _ = load_dotenv()
-con_str = os.getenv("DATABASE_CONN_STRING")
-
 CONN = sqlalchemy.create_engine(os.getenv("DATABASE_CONN_STRING")).connect()
+OTHER_CONN = sqlalchemy.create_engine(os.getenv("OTHER_DATABASE_CONN_STRING")).connect()
 
 @app.route('/')
 def hello():
@@ -26,6 +25,11 @@ def hello():
 @app.route("/projects", methods=['GET'])
 def projects():
     return get_response()
+
+@app.route("/march-madness-2025", methods=['GET'])
+def get_march_madness():
+    data = pd.read_sql(sql.text("select * from sports_data.tourney_predictions_2025"), OTHER_CONN)
+    return data.to_json(orient="records")
 
 
 @cachetools.cached(cache=cachetools.TTLCache(maxsize=1024, ttl=30))
