@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Admin Dashboard</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
 </head>
 <body>
 <div class="container-fluid mt-3">
@@ -103,10 +104,103 @@
         {% endfor %}
         </tbody>
     </table>
+
+    <hr class="mt-5">
+
+    <h4>Add New Blog Post</h4>
+    <form action="{{ url_for('add_blog_post') }}" method="post" class="mb-4">
+        <div class="form-group">
+            <label for="blog-title">Title</label>
+            <input type="text" class="form-control" id="blog-title" name="title" placeholder="Title" required>
+        </div>
+        <div class="form-group">
+            <label for="blog-content">Content</label>
+            <textarea class="form-control" id="blog-content" name="content" placeholder="Content (Markdown)"></textarea>
+        </div>
+        <button type="submit" class="btn btn-success">Add Post</button>
+    </form>
+
+    <h4>Existing Blog Posts</h4>
+    <table class="table table-bordered table-striped">
+        <thead class="thead-dark">
+        <tr>
+            <th>Title</th>
+            <th>Content</th>
+            <th>Created At</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for post in blog_posts %}
+            <tr>
+                <td>{{ post.title }}</td>
+                <td>{{ post.content[:100] }}...</td>
+                <td>{{ post.created_at }}</td>
+                <td>
+                    <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#editBlogPostModal-{{ post.id }}">Edit</button>
+                    <form action="{{ url_for('delete_blog_post', post_id=post.id) }}" method="post" style="display: inline-block;">
+                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                    </form>
+                </td>
+            </tr>
+
+            <!-- Edit Blog Post Modal -->
+            <div class="modal fade" id="editBlogPostModal-{{ post.id }}" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Edit Blog Post</h5>
+                            <button type="button" class="close" data-dismiss="modal">
+                                <span>&times;</span>
+                            </button>
+                        </div>
+                        <form action="{{ url_for('edit_blog_post', post_id=post.id) }}" method="post">
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label>Title</label>
+                                    <input type="text" class="form-control" name="title" value="{{ post.title }}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Content</label>
+                                    <textarea class="form-control" id="edit-content-{{ post.id }}" name="content">{{ post.content }}</textarea>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Save changes</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        </tbody>
+    </table>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+<script>
+    // Initialize SimpleMDE for the 'Add New Blog Post' form
+    var addForm = document.querySelector('form[action="{{ url_for('add_blog_post') }}"]');
+    var simplemde = new SimpleMDE({element: document.getElementById("blog-content")});
+    addForm.addEventListener('submit', function() {
+        document.getElementById('blog-content').value = simplemde.value();
+    });
+
+    // Initialize SimpleMDE for each 'Edit Blog Post' modal
+    {% for post in blog_posts %}
+    (function() {
+        var editForm = document.querySelector('form[action="{{ url_for('edit_blog_post', post_id=post.id) }}"]');
+        var editorId = "edit-content-{{ post.id }}";
+        var editEditor = new SimpleMDE({element: document.getElementById(editorId)});
+        editForm.addEventListener('submit', function() {
+            document.getElementById(editorId).value = editEditor.value();
+        });
+    })();
+    {% endfor %}
+</script>
 </body>
 </html>

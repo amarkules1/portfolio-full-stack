@@ -83,7 +83,8 @@ def login():
 @login_required
 def dashboard():
     projects = pd.read_sql(sql.text("select * from portfolio_projects order by priority, created_at desc"), CONN)
-    return render_template('admin/dashboard.html', projects=projects.to_dict(orient='records'))
+    blog_posts = pd.read_sql(sql.text("select * from blog_posts order by created_at desc"), CONN)
+    return render_template('admin/dashboard.html', projects=projects.to_dict(orient='records'), blog_posts=blog_posts.to_dict(orient='records'))
 
 @app.route('/admin/logout')
 @login_required
@@ -130,6 +131,57 @@ def delete_project(project_id):
         CONN.commit()
         projects_cache.clear()
         flash('Project deleted successfully!')
+    return redirect(url_for('dashboard'))
+
+
+blog_posts_cache = cachetools.TTLCache(maxsize=1024, ttl=30)
+
+
+@app.route('/blog', methods=['GET'])
+@cachetools.cached(cache=blog_posts_cache)
+def get_blog_posts():
+    data = pd.read_sql(sql.text("select * from blog_posts order by created_at desc"), CONN)
+    CONN.commit()
+    return data.to_json(orient="records")
+
+
+@app.route('/admin/blog/add', methods=['POST'])
+@login_required
+def add_blog_post():
+    if request.method == 'POST':
+        title = request.form.get('title')
+        content = request.form.get('content')
+        query = sql.text("INSERT INTO blog_posts (title, content, created_at) VALUES (:title, :content, now())")
+        CONN.execute(query, {'title': title, 'content': content})
+        CONN.commit()
+        blog_posts_cache.clear()
+        flash('Blog post added successfully!')
+    return redirect(url_for('dashboard'))
+
+
+@app.route('/admin/blog/edit/<int:post_id>', methods=['POST'])
+@login_required
+def edit_blog_post(post_id):
+    if request.method == 'POST':
+        title = request.form.get('title')
+        content = request.form.get('content')
+        query = sql.text("UPDATE blog_posts SET title=:title, content=:content WHERE id=:id")
+        CONN.execute(query, {'title': title, 'content': content, 'id': post_id})
+        CONN.commit()
+        blog_posts_cache.clear()
+        flash('Blog post updated successfully!')
+    return redirect(url_for('dashboard'))
+
+
+@app.route('/admin/blog/delete/<int:post_id>', methods=['POST'])
+@login_required
+def delete_blog_post(post_id):
+    if request.method == 'POST':
+        query = sql.text("DELETE FROM blog_posts WHERE id=:id")
+        CONN.execute(query, {'id': post_id})
+        CONN.commit()
+        blog_posts_cache.clear()
+        flash('Blog post deleted successfully!')
     return redirect(url_for('dashboard'))
 
 
