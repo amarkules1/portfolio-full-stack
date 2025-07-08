@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container-fluid mt-3">
+    <div class="d-flex justify-content-between align-items-center">
+        <h2>Admin Dashboard</h2>
+        <a href="{{ url_for('logout') }}" class="btn btn-danger">Logout</a>
+    </div>
+    <hr>
+
+    <h4>Add New Project</h4>
+    <form action="{{ url_for('add_project') }}" method="post" class="mb-4">
+        <div class="form-row">
+            <div class="form-group col-md-3">
+                <input type="text" class="form-control" name="title" placeholder="Title" required>
+            </div>
+            <div class="form-group col-md-3">
+                <input type="text" class="form-control" name="url" placeholder="URL" required>
+            </div>
+            <div class="form-group col-md-4">
+                <input type="text" class="form-control" name="description" placeholder="Description" required>
+            </div>
+            <div class="form-group col-md-1">
+                <input type="number" class="form-control" name="priority" placeholder="Priority" required>
+            </div>
+            <div class="form-group col-md-1">
+                <button type="submit" class="btn btn-success">Add</button>
+            </div>
+        </div>
+    </form>
+
+    <h4>Existing Projects</h4>
+    <table class="table table-bordered table-striped">
+        <thead class="thead-dark">
+        <tr>
+            <th>Title</th>
+            <th>URL</th>
+            <th>Description</th>
+            <th>Priority</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for project in projects %}
+            <tr>
+                <td>{{ project.title }}</td>
+                <td><a href="{{ project.url }}" target="_blank">{{ project.url }}</a></td>
+                <td>{{ project.description }}</td>
+                <td>{{ project.priority }}</td>
+                <td>
+                    <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#editModal-{{ project.id }}">Edit</button>
+                    <form action="{{ url_for('delete_project', project_id=project.id) }}" method="post" style="display: inline-block;">
+                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                    </form>
+                </td>
+            </tr>
+
+            <!-- Edit Modal -->
+            <div class="modal fade" id="editModal-{{ project.id }}" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Edit Project</h5>
+                            <button type="button" class="close" data-dismiss="modal">
+                                <span>&times;</span>
+                            </button>
+                        </div>
+                        <form action="{{ url_for('edit_project', project_id=project.id) }}" method="post">
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label>Title</label>
+                                    <input type="text" class="form-control" name="title" value="{{ project.title }}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>URL</label>
+                                    <input type="text" class="form-control" name="url" value="{{ project.url }}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Description</label>
+                                    <input type="text" class="form-control" name="description" value="{{ project.description }}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Priority</label>
+                                    <input type="number" class="form-control" name="priority" value="{{ project.priority }}" required>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Save changes</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

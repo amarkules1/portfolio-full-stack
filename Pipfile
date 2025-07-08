@@ -21,6 +21,7 @@ gunicorn = "*"
 pytest = "*"
 psycopg2 = "*"
 cachetools = "*"
+flask-login = "*"
 
 [dev-packages]
 
