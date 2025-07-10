@@ -2,7 +2,7 @@ import json
 import os
 
 import cachetools
-from flask import Flask, redirect, render_template, request, url_for, flash
+from flask import Flask, redirect, render_template, request, url_for, flash, jsonify
 import pandas as pd
 import sqlalchemy
 from sqlalchemy import sql
@@ -143,6 +143,18 @@ def get_blog_posts():
     data = pd.read_sql(sql.text("select * from blog_posts order by created_at desc"), CONN)
     CONN.commit()
     return data.to_json(orient="records")
+
+
+@app.route('/blog/<int:post_id>', methods=['GET'])
+@cachetools.cached(cache=blog_posts_cache)
+def get_blog_post(post_id):
+    query = sql.text("SELECT * FROM blog_posts WHERE id = :id")
+    data = pd.read_sql(query, CONN, params={'id': post_id})
+    CONN.commit()
+    if not data.empty:
+        return jsonify(data.to_dict(orient='records')[0])
+    else:
+        return jsonify({'error': 'Post not found'}), 404
 
 
 @app.route('/admin/blog/add', methods=['POST'])
