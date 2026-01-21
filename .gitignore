@@ -4,3 +4,4 @@
 *.db
 *.pem
 texas-holdem-dashboard.txt
+/portfolio-frontend/node_modules

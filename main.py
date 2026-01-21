@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 
 
-app = Flask(__name__, static_folder='portfolio/build', static_url_path='', template_folder='templates')
+app = Flask(__name__, static_folder='portfolio-frontend/build', static_url_path='', template_folder='templates')
 CORS(app)
 
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev-secret-key')

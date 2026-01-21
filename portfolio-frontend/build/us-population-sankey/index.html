@@ -1,0 +1,74 @@
+<html lang="en">
+
+<head>
+
+</head>
+
+<body>
+  <h1 class="page-title">US Population Change Visualization - 2020 to 2060</h1>
+  <div id="app">
+    <div class='range-slider'>
+      <h3 class="begin-label">Beginning Year </h3>
+      <input type="range" min="2020" max="2060" step="1" v-model="sliderMin">
+      <input type="number" min="2020" max="2060" step="1" v-model="sliderMin">
+      <input type="range" min="2020" max="2060" step="1" v-model="sliderMax">
+      <input type="number" min="2020" max="2060" step="1" v-model="sliderMax">
+      <h3 class="end-label"> Ending Year</h3>
+    </div>
+  </div>
+  <div id="my_dataviz"></div>
+
+  <!-- Dependencies -->
+  <!-- Vue -->
+  <script src="https://unpkg.com/vue@2"></script>
+  <!-- d3 -->
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/holtzy/D3-graph-gallery@master/LIB/sankey.js"></script>
+  <!-- papaparse csv parser -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+  <!-- my code -->
+  <link rel="stylesheet" href="styles.css">
+  <script src="task1_data.js"></script>
+  <script src="main.js"></script>
+
+  <div>
+    <h3>Sources:</h3>
+    <ul>
+      <li>Data Gathered from the <a href="https://www.census.gov/data/datasets/2017/demo/popproj/2017-popproj.html">US
+          Census Bureau Population Forcast from 2017</a>; Specifically the 4 tables below:</li>
+      <ul>
+        <li><a
+            href="https://www2.census.gov/programs-surveys/popproj/datasets/2017/2017-popproj/np2017_d1_mid.csv">Projected
+            Population by Single Year of Age, Sex, Race, and Hispanic Origin for the United States: 2016 to 2060 - Main
+            Series</a></li>
+        <li><a
+            href="https://www2.census.gov/programs-surveys/popproj/datasets/2017/2017-popproj/np2017_d2_mid.csv">Projected
+            Births by Sex, Race, and Hispanic Origin for the United States: 2016 to 2060 - Main Series</a></li>
+        <li><a
+            href="https://www2.census.gov/programs-surveys/popproj/datasets/2017/2017-popproj/np2017_d3_mid.csv">Projected
+            Deaths by Single Year of Age, Sex, Race, and Hispanic Origin for the United States: 2016 to 2060 - Main
+            Series</a></li>
+        <li><a
+            href="https://www2.census.gov/programs-surveys/popproj/datasets/2017/2017-popproj/np2017_d4_mid.csv">Projected
+            Net International Migration by Single Year of Age, Sex, Race, and Hispanic Origin for the United States:
+            2016 to 206 - Main Series</a></li>
+      </ul>
+      <li>Visualization created with assistance from the following:</li>
+      <ul><a href="https://vuejs.org/guide/quick-start.html#without-build-tools">Vue.js Quick Start Without Build
+          Tools</a></ul>
+      <ul><a href="https://d3-graph-gallery.com/graph/sankey_basic.html">Most basic Sankey diagram in d3.js</a></ul>
+      <ul><a href="https://bl.ocks.org/d3noob/013054e8d7807dff76247b81b0e29030">Sankey Diagram with v4</a></ul>
+      <ul><a href="https://www.papaparse.com/docs">PapaParse CSV Parser</a></ul>
+      <ul><a
+          href="https://stackoverflow.com/questions/61871010/how-to-create-double-range-slider-using-native-html-input-range-and-vue-js">Stack
+          Overflow: How to create double range slider using native html input range and Vue.js?</a></ul>
+      <ul><a href="https://stackoverflow.com/questions/7431268/how-to-read-data-from-csv-file-using-javascript">Stack
+          Overflow: How to read data From *.CSV file using javascript?</a></ul>
+      <ul><a href="https://stackoverflow.com/questions/20449512/how-to-add-custom-colors-in-d3-nodes-of-a-graph">Stack
+          Overflow: How to add custom colors in D3 nodes of a graph</a></ul>
+    </ul>
+  </div>
+
+</body>
+
+</html>
