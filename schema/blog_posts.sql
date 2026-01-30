@@ -5,3 +5,6 @@ create table public.blog_posts (
   content text null,
   constraint blog_posts_pkey primary key (id)
 ) TABLESPACE pg_default;
+
+INSERT INTO public.blog_posts (title, content)
+VALUES ('My First Blog Post', 'This is a dummy blog post to test the database insertion.');
