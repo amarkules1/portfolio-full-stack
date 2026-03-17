@@ -54,7 +54,7 @@ def get_march_madness():
 
 @app.route("/march-madness-2026", methods=['GET'])
 def get_march_madness_2026():
-    data = pd.read_sql(sql.text("select * from sports_data.tourney_predictions_2026"), OTHER_CONN)
+    data = pd.read_sql(sql.text("select * from sports_data.tourney_predictions_2026_a"), OTHER_CONN)
     return data.to_json(orient="records")
 
 
