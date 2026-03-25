@@ -17,6 +17,7 @@ class WorkExperience extends Component {
                     <li className="detail">Develops analytics dashboards using data visualization best practices, working with stakeholders to provide insights for franchisees and internal marketing and finance departments.</li>
                     <li className="detail">Leverages Databricks and Azure cloud tools to build out ETL pipelines, improving performance, robustness, and cost efficiency while building out our data lake solution.</li>
                     <li className="detail">Works with internal stakeholders to provide in-depth data analysis in support of company needs and initiatives, such as marketing campaigns and financial reporting needs.</li>
+                    <li className="detail">Utilizes public and proprietary data sources to build predictive models for forecasting and customer segmentation.</li>
                 </ul>
             </div>
             <div className="experience">
