@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>North American Wildfire Trends & Outlier Dashboard (1983 - 2025)</title>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="An interactive web dashboard exploring historical wildfire prevalence, outlier seasons, and long-term climate trends in the US and Canada from 1983 to 2025.">
+  <meta name="keywords" content="wildfires, forest fires, US, Canada, climate change, forest fire statistics, area burned, NIFC, CIFFC, CNFDB">
+  <meta name="author" content="Antigravity Coding Assistant">
+  
+  <!-- CSS Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+  
+  <!-- FontAwesome Icons CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <!-- Sidebar Control Panel -->
+    <aside class="sidebar">
+      <div class="brand-section">
+        <h1 class="brand-title" id="dashboard-main-title">
+          <i class="fa-solid fa-fire"></i> EmberScale
+        </h1>
+        <p class="brand-subtitle">
+          North American Forest Fire Trends & Outliers (1983 - 2025)
+        </p>
+      </div>
+      
+      <!-- Country Selection -->
+      <div class="control-group">
+        <span class="control-label">Geographic Filter</span>
+        <div class="toggle-group" id="country-toggle-group">
+          <button class="toggle-btn active" data-country="all" id="btn-country-all">Combined</button>
+          <button class="toggle-btn" data-country="us" id="btn-country-us">US</button>
+          <button class="toggle-btn" data-country="canada" id="btn-country-canada">Canada</button>
+        </div>
+      </div>
+      
+      <!-- Unit Selection -->
+      <div class="control-group">
+        <span class="control-label">Measurement Unit</span>
+        <div class="toggle-group" id="unit-toggle-group">
+          <button class="toggle-btn" data-unit="acres" id="btn-unit-acres">Acres</button>
+          <button class="toggle-btn active" data-unit="hectares" id="btn-unit-hectares">Hectares</button>
+          <button class="toggle-btn" data-unit="sq_km" id="btn-unit-sqkm">km²</button>
+          <button class="toggle-btn" data-unit="sq_mi" id="btn-unit-sqmi">sq mi</button>
+        </div>
+      </div>
+      
+      <!-- Region Dropdown -->
+      <div class="control-group">
+        <label for="region-select" class="control-label">Narrow in on Region</label>
+        <select id="region-select" class="custom-select">
+          <!-- Populated dynamically via JS -->
+          <option value="all">Entire Region (National)</option>
+        </select>
+        <p style="font-size: 0.7rem; color: var(--text-muted); line-height: 1.3; margin-top: 0.35rem;">
+          *Regional data represents estimated historical baseline contributions based on NIFC/CNFDB distributions.
+        </p>
+      </div>
+      
+      <!-- Sidebar Summary Snapshot -->
+      <div class="snapshot-card" id="sidebar-analysis-snapshot">
+        <h3 class="snapshot-title" id="sidebar-summary-title">
+          <i class="fas fa-fire-flame-curved"></i> Key Analysis
+        </h3>
+        <p class="snapshot-text" id="sidebar-summary-text">
+          Loading metrics analysis...
+        </p>
+      </div>
+    </aside>
+    
+    <!-- Main Scrollable Dashboard Content -->
+    <main class="main-content">
+      
+      <!-- Dashboard Top Header -->
+      <header style="display: flex; flex-direction: column; gap: 0.25rem;">
+        <h2 style="font-size: 1.8rem; font-weight: 700; color: var(--text-primary);">Prevalence & Severity Dashboard</h2>
+        <p style="color: var(--text-secondary); font-size: 0.9rem;">
+          Baseline observations since 1983, comparing fire frequency against overall area consumed to expose shifting risk profiles.
+        </p>
+      </header>
+      
+      <!-- High-Level KPI Cards Grid -->
+      <section class="kpi-grid" id="kpi-panel">
+        
+        <!-- KPI Card 1: Total Area Burned -->
+        <div class="kpi-card" id="card-total-area">
+          <div class="kpi-header">
+            <span>Total Area Burned</span>
+            <i class="fa-solid fa-fire kpi-icon"></i>
+          </div>
+          <div class="kpi-value" id="kpi-total-area">-</div>
+          <span style="font-size: 0.75rem; color: var(--text-muted);" id="kpi-total-area-unit">Hectares</span>
+        </div>
+        
+        <!-- KPI Card 2: Average Annual Area -->
+        <div class="kpi-card" id="card-avg-area">
+          <div class="kpi-header">
+            <span>Average Annual Burn</span>
+            <i class="fa-solid fa-calendar-days kpi-icon"></i>
+          </div>
+          <div class="kpi-value" id="kpi-avg-area">-</div>
+          <span style="font-size: 0.75rem; color: var(--text-muted);" id="kpi-avg-area-unit">Hectares/yr</span>
+        </div>
+        
+        <!-- KPI Card 3: Total Fires -->
+        <div class="kpi-card" id="card-total-fires">
+          <div class="kpi-header">
+            <span>Total Fire Incidents</span>
+            <i class="fa-solid fa-house-fire kpi-icon"></i>
+          </div>
+          <div class="kpi-value" id="kpi-total-fires">-</div>
+          <span style="font-size: 0.75rem; color: var(--text-muted);">Reported fires</span>
+        </div>
+        
+        <!-- KPI Card 4: Average Fire Size -->
+        <div class="kpi-card" id="card-avg-size">
+          <div class="kpi-header">
+            <span>Average Size per Fire</span>
+            <i class="fa-solid fa-expand kpi-icon"></i>
+          </div>
+          <div class="kpi-value" id="kpi-avg-size">-</div>
+          <span style="font-size: 0.75rem; color: var(--text-muted);" id="kpi-avg-size-unit">Hectares/fire</span>
+        </div>
+
+        <!-- KPI Card 5: Trend Indicator -->
+        <div class="kpi-card" id="card-decadal-trend">
+          <div class="kpi-header">
+            <span>43-Year Decadal Trend</span>
+            <i class="fa-solid fa-arrow-trend-up kpi-icon" id="kpi-trend-icon"></i>
+          </div>
+          <div class="kpi-value" id="kpi-trend-pct">-</div>
+          <span style="font-size: 0.75rem; color: var(--text-muted); line-height: 1.3;" id="kpi-trend-label">Change in average baseline</span>
+        </div>
+        
+      </section>
+      
+      <!-- Charts Section -->
+      <section class="charts-grid">
+        
+        <!-- Chart 1: Yearly Area Burned Timeline (Full Width) -->
+        <div class="chart-card full-width" id="card-area-timeline">
+          <div class="chart-header">
+            <div class="chart-title-group">
+              <h3 class="chart-title">Annual Wildfire Area Burned (1983 - 2025)</h3>
+              <p class="chart-subtitle">Hover to view year details. Note the distinct outlier years highlighted in red.</p>
+            </div>
+          </div>
+          <div class="chart-container">
+            <canvas id="areaChart"></canvas>
+          </div>
+        </div>
+        
+        <!-- Chart 2: Divergence Trend (Teal Line vs Orange Line) -->
+        <div class="chart-card" id="card-frequency-vs-severity">
+          <div class="chart-header">
+            <div class="chart-title-group">
+              <h3 class="chart-title">Divergence: Frequency vs. Severity</h3>
+              <p class="chart-subtitle">Plotting the total number of fires (blue) against the average fire size (orange).</p>
+            </div>
+          </div>
+          <div class="chart-container">
+            <canvas id="trendChart"></canvas>
+          </div>
+        </div>
+        
+        <!-- Chart 3: Regional Distribution (Doughnut) -->
+        <div class="chart-card" id="card-regional-distribution">
+          <div class="chart-header">
+            <div class="chart-title-group">
+              <h3 class="chart-title">Historical Regional Shares</h3>
+              <p class="chart-subtitle">Relative distribution of fire acreage by geographic sub-zone.</p>
+            </div>
+          </div>
+          <div class="chart-container" style="max-height: 200px; margin-bottom: 0.5rem;">
+            <canvas id="regionalChart"></canvas>
+          </div>
+          <!-- Textual description of active regions container -->
+          <div id="regional-desc-list" style="overflow-y: auto; max-height: 140px; margin-top: 0.5rem; padding-right: 0.25rem;">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+        
+      </section>
+      
+      <!-- Outliers & Spotlight Spotlight Panel -->
+      <section class="outliers-section">
+        
+        <!-- List of outlier years selection -->
+        <div class="outliers-list-card" id="card-outliers-selector">
+          <h3 class="chart-title">Outlier Year Index</h3>
+          <p class="chart-subtitle" style="margin-bottom: 0.5rem;">
+            Select an outlier year to inspect the severe weather regimes and fire behavior that defined it.
+          </p>
+          <div class="outlier-buttons-grid">
+            <button class="outlier-select-btn" onclick="selectOutlier(1989)" id="btn-outlier-1989">
+              <span class="outlier-btn-year">1989</span>
+              <span class="outlier-btn-country">Canada</span>
+            </button>
+            <button class="outlier-select-btn" onclick="selectOutlier(2004)" id="btn-outlier-2004">
+              <span class="outlier-btn-year">2004</span>
+              <span class="outlier-btn-country">US (AK)</span>
+            </button>
+            <button class="outlier-select-btn" onclick="selectOutlier(2015)" id="btn-outlier-2015">
+              <span class="outlier-btn-year">2015</span>
+              <span class="outlier-btn-country">United States</span>
+            </button>
+            <button class="outlier-select-btn" onclick="selectOutlier(2020)" id="btn-outlier-2020">
+              <span class="outlier-btn-year">2020</span>
+              <span class="outlier-btn-country">United States</span>
+            </button>
+            <button class="outlier-select-btn active" onclick="selectOutlier(2023)" id="btn-outlier-2023">
+              <span class="outlier-btn-year">2023</span>
+              <span class="outlier-btn-country">Canada</span>
+            </button>
+            <button class="outlier-select-btn" onclick="selectOutlier(2025)" id="btn-outlier-2025">
+              <span class="outlier-btn-year">2025</span>
+              <span class="outlier-btn-country">Canada</span>
+            </button>
+          </div>
+        </div>
+        
+        <!-- Spotlight details layout -->
+        <div class="spotlight-card" id="card-outlier-spotlight">
+          <span class="spotlight-tag canada" id="spotlight-tag">Canada Spotlight</span>
+          <div class="spotlight-header">
+            <h3 class="spotlight-title" id="spotlight-title">2023: Canadian Pyro-Crisis</h3>
+            <p class="spotlight-subtitle" id="spotlight-subtitle">The Global Record Breaker</p>
+          </div>
+          <div class="spotlight-stat" id="spotlight-stat">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <span id="spotlight-stat-value">17.6M Hectares Burned</span>
+          </div>
+          <p class="spotlight-desc" id="spotlight-desc">
+            By far the most destructive wildfire season in North American history, burning more than triple the long-term Canadian average. Extreme drought and early summer heat caused concurrent outbreaks across Quebec, Alberta, BC, and the NWT. Standard firefighting resources were overwhelmed, leading to the mobilization of thousands of international firefighters. Smoke plumes traveled thousands of miles, choking air quality in New York City, Chicago, and Western Europe, and releasing over 1.7 billion tonnes of CO₂ equivalent.
+          </p>
+        </div>
+        
+      </section>
+      
+      <!-- Citing Sources & Authorities -->
+      <footer class="sources-card" id="dashboard-sources">
+        <h3 class="sources-title">
+          <i class="fa-solid fa-circle-info"></i> Data Authorities & Citations
+        </h3>
+        <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5;">
+          Wildfire reporting is subject to updates as post-season satellite burn mapping (like NBAC) corrects tactical field reports. Consistent digital baseline databases for both the US and Canada begin in 1983; data compiled prior to this period relies on fragmented state/provincial paper systems and is not considered comparable.
+        </p>
+        <div class="sources-list">
+          
+          <div class="source-item" id="source-nifc">
+            <span class="source-name">National Interagency Fire Center (NIFC)</span>
+            <span class="source-desc">Coordinates wildland firefighting agencies in the US. Author of the NICC Wildland Fire Summary and Statistics (Redbooks) which host historical state-by-state data.</span>
+            <a class="source-link" href="https://www.nifc.gov/fire-information/statistics/wildfires" target="_blank" rel="noopener noreferrer">
+              NIFC Official Statistics <i class="fa-solid fa-arrow-up-right-from-square"></i>
+            </a>
+          </div>
+          
+          <div class="source-item" id="source-cwfis">
+            <span class="source-name">Canadian Wildland Fire Information System (CWFIS)</span>
+            <span class="source-desc">Managed by Natural Resources Canada (NRCan). Compiles the Canadian National Fire Database (CNFDB), standardizing fire points and perimeters from 1980-present.</span>
+            <a class="source-link" href="https://cwfis.cfs.nrcan.gc.ca/" target="_blank" rel="noopener noreferrer">
+              CWFIS Data Portal <i class="fa-solid fa-arrow-up-right-from-square"></i>
+            </a>
+          </div>
+          
+          <div class="source-item" id="source-ciffc">
+            <span class="source-name">Canadian Interagency Forest Fire Centre (CIFFC)</span>
+            <span class="source-desc">Coordinates resource sharing across Canada's provinces and territories, compiling daily situation summaries and final annual reports.</span>
+            <a class="source-link" href="https://ciffc.net/" target="_blank" rel="noopener noreferrer">
+              CIFFC Annual Reports <i class="fa-solid fa-arrow-up-right-from-square"></i>
+            </a>
+          </div>
+          
+        </div>
+      </footer>
+      
+    </main>
+    
+  </div>
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <!-- Data and Application Logic Scripts -->
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
