@@ -18,7 +18,7 @@ if [ "${TARGET_USER}" = "root" ]; then
 else
     USER_HOME="/home/${TARGET_USER}"
 fi
-REPO_DIR="${USER_HOME}/repos/portfolio-full-stack"
+REPO_DIR="/home/alex/repos/portfolio-full-stack"
 DOMAIN="marqless.xyz"
 
 echo "=================================================="
@@ -31,7 +31,7 @@ docker stop portfolio-full-stack || echo "Container already stopped or not found
 
 # 2. Renew Certificate (Non-Interactive)
 echo "[2/5] Running Certbot renewal..."
-certbot certonly --apache --domain "${DOMAIN}" --non-interactive --agree-tos
+certbot certonly --standalone --domain "${DOMAIN}" --non-interactive --agree-tos
 
 # 3. Copy Certificates (-L dereferences symlinks to copy real files)
 echo "[3/5] Copying certificates to repository..."
