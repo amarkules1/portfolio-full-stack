@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>CleetusCopter - Freedom Factory Flight Game</title>
+  <meta name="description" content="Fly Cleetus McFarland's helicopter through Freedom Factory obstacles! Hell Yeah Brother! A high-flying flappy bird style game.">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800;900&family=Press+Start+2P&display=swap" rel="stylesheet">
+  <script type="module" crossorigin src="/cleetus-copter/assets/index-C4bocSP4.js"></script>
+  <link rel="stylesheet" crossorigin href="/cleetus-copter/assets/index-DVDQ0T2_.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Main Game Container -->
+    <div class="game-wrapper">
+      <canvas id="game-canvas"></canvas>
+
+      <!-- HUD Layer -->
+      <div id="hud-overlay" class="hud-overlay hidden">
+        <div class="hud-top">
+          <div class="hud-stat score-box">
+            <span class="hud-label">SCORE</span>
+            <span id="current-score" class="hud-value">0</span>
+          </div>
+
+          <div class="hud-stat eagle-box">
+            <span class="hud-icon">🦅</span>
+            <span id="eagle-count" class="hud-value">0</span>
+          </div>
+
+          <div class="hud-stat best-box">
+            <span class="hud-label">BEST</span>
+            <span id="best-score" class="hud-value">0</span>
+          </div>
+
+          <button id="btn-sound-toggle" class="icon-btn" title="Toggle Audio">
+            <span id="sound-icon">🔊</span>
+          </button>
+        </div>
+
+        <!-- Nitrous Boost Meter -->
+        <div class="boost-container">
+          <div class="boost-header">
+            <span class="boost-label">🔥 NITROUS BOOST</span>
+            <span id="boost-status" class="boost-status">COLLECT TURBOS</span>
+          </div>
+          <div class="boost-bar-bg">
+            <div id="boost-fill" class="boost-fill" style="width: 0%;"></div>
+          </div>
+          <div id="boost-prompt" class="boost-prompt hidden">PRESS [SHIFT] / TAP BOOST!</div>
+        </div>
+
+        <!-- Touch Controls for Mobile -->
+        <div id="touch-boost-btn" class="touch-boost-btn hidden">
+          BOOST! 🔥
+        </div>
+      </div>
+
+      <!-- Start Screen Overlay -->
+      <div id="start-overlay" class="screen-overlay">
+        <div class="card glass-card title-card">
+          <div class="badge-tag">FREEDOM FACTORY AVIATION</div>
+          <h1 class="game-title">CLEETUS<span class="highlight">COPTER</span></h1>
+          <p class="tagline">Fly Cleetus's Chopper! Avoid Obstacles & Do It For Dale!</p>
+
+          <div class="helicopter-preview-box">
+            <canvas id="preview-canvas" width="160" height="100"></canvas>
+            <div id="selected-skin-name" class="skin-badge">FREEDOM COPTER</div>
+          </div>
+
+          <div class="controls-guide">
+            <div class="control-item">
+              <kbd>SPACE</kbd> / <kbd>CLICK</kbd> / <kbd>TAP</kbd> <span>Lift / Flap</span>
+            </div>
+            <div class="control-item">
+              <kbd>SHIFT</kbd> / <kbd>BOOST BTN</kbd> <span>Nitrous Boost</span>
+            </div>
+          </div>
+
+          <div class="button-group">
+            <button id="btn-start" class="btn btn-primary btn-large">
+              <span>LET HER RIP! 🚁</span>
+            </button>
+            <button id="btn-garage" class="btn btn-secondary">
+              <span>GARAGE 🔧</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Game Over Overlay -->
+      <div id="gameover-overlay" class="screen-overlay hidden">
+        <div class="card glass-card gameover-card">
+          <div class="gameover-header">
+            <span class="skull-icon">💥</span>
+            <h2>GARAGE BOUND!</h2>
+          </div>
+          
+          <div id="cleetus-quote" class="cleetus-quote">"That's a lot of damage, but we'll fix it!"</div>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <span class="stat-title">SCORE</span>
+              <span id="final-score" class="stat-number">0</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-title">BEST SCORE</span>
+              <span id="final-best" class="stat-number">0</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-title">EAGLES</span>
+              <span id="final-eagles" class="stat-number">0</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-title">BOOSTS USED</span>
+              <span id="final-boosts" class="stat-number">0</span>
+            </div>
+          </div>
+
+          <div id="new-record-badge" class="new-record-badge hidden">
+            🏆 NEW HIGH SCORE! HELL YEAH BROTHER!
+          </div>
+
+          <div class="button-group">
+            <button id="btn-retry" class="btn btn-primary btn-large">
+              <span>FLY AGAIN 🔄</span>
+            </button>
+            <button id="btn-garage-go" class="btn btn-secondary">
+              <span>GARAGE 🔧</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Garage Modal -->
+      <div id="garage-modal" class="modal-overlay hidden">
+        <div class="card glass-card modal-card">
+          <div class="modal-header">
+            <h2>HELI GARAGE</h2>
+            <button id="btn-close-garage" class="close-btn">&times;</button>
+          </div>
+          <p class="modal-subtitle">Choose your ride & unlock new Freedom Choppers!</p>
+
+          <div id="skin-grid" class="skin-grid">
+            <!-- Populated dynamically by Garage UI -->
+          </div>
+
+          <div class="modal-footer">
+            <button id="btn-equip-close" class="btn btn-primary">DONE</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>
