@@ -17,7 +17,7 @@ class About extends Component {
             <div className="col-lg-5">
               <h1 className="font-weight-light">About</h1>
               <p>
-                Hi, I'm Alex. I'm currently a Data Engineer for SalesPage Technologies. I recently graduated from Grand Valley State University
+                Hi, I'm Alex. I'm currently a Data Engineer for Tommy's Car Wash. I recently graduated from Grand Valley State University
                 with a MS in Data Science and Analytics. I have a wide range of interests in the realm of software development, 
                 ranging from Web Development to Statistical Analysis to Machine Learning and AI. 
                 This site is a collection of some of the projects and articles I work on in my free time. 
