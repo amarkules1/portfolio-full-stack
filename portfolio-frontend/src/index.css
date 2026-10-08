@@ -13,7 +13,7 @@
   --border-focus: #284e3a;
   --border-highlight: #34d399;
 
-  /* Forest Accents - Refined, not overly glowing */
+  /* Forest Accents - Refined */
   --forest-primary: #15803d;
   --forest-accent: #22c55e;
   --forest-light: #4ade80;
@@ -109,7 +109,7 @@ code, pre {
 }
 
 /* ====================================================
-   NAVIGATION - Clean, sharp, precise
+   NAVIGATION
    ==================================================== */
 .navigation-wrapper {
   position: sticky;
@@ -117,7 +117,7 @@ code, pre {
   z-index: 1000;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  background: rgba(8, 15, 11, 0.9);
+  background: rgba(8, 15, 11, 0.94);
   border-bottom: 1px solid var(--border-subtle);
 }
 
@@ -162,6 +162,10 @@ code, pre {
   color: var(--text-main);
 }
 
+.nav-menu-container {
+  display: block;
+}
+
 .custom-nav-links {
   display: flex;
   align-items: center;
@@ -185,7 +189,7 @@ code, pre {
 
 .custom-nav-link:hover {
   color: var(--text-main) !important;
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(255, 255, 255, 0.04);
 }
 
 .custom-nav-link.active {
@@ -203,10 +207,57 @@ code, pre {
   padding: 6px 10px;
   cursor: pointer;
   display: none;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-fast);
+}
+
+.navbar-toggler-custom:hover {
+  background: #14251b;
+  border-color: var(--border-focus);
+}
+
+/* Mobile Navigation Rules */
+@media (max-width: 768px) {
+  .navbar-toggler-custom {
+    display: inline-flex;
+  }
+
+  .nav-menu-container {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #080f0b;
+    border-top: 1px solid var(--border-subtle);
+    border-bottom: 1px solid var(--border-focus);
+    box-shadow: 0 16px 30px rgba(0, 0, 0, 0.7);
+    padding: 12px 16px;
+    z-index: 1050;
+  }
+
+  .nav-menu-container.is-open {
+    display: block !important;
+  }
+
+  .custom-nav-links {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+  }
+
+  .custom-nav-link {
+    display: block;
+    width: 100%;
+    padding: 10px 14px !important;
+    border-radius: var(--radius-sm);
+    font-size: 0.95rem;
+  }
 }
 
 /* ====================================================
-   ABOUT / HERO SECTION - Authentic, engineering tone
+   ABOUT / HERO SECTION
    ==================================================== */
 .about-hero-card {
   background: var(--bg-surface);
@@ -228,7 +279,6 @@ code, pre {
   border-radius: var(--radius-md);
   border: 1px solid var(--border-focus);
   box-shadow: var(--card-shadow);
-  filter: contrast(1.02);
 }
 
 .role-tag {
@@ -271,7 +321,7 @@ code, pre {
   margin-bottom: 28px;
 }
 
-/* Buttons - Crisp, solid, functional */
+/* Buttons */
 .btn-emerald-primary {
   display: inline-flex;
   align-items: center;
@@ -320,7 +370,7 @@ code, pre {
   transform: translateY(-1px);
 }
 
-/* Competency / Domain Cards */
+/* Feature Grid */
 .feature-cards-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -846,34 +896,5 @@ code, pre {
 @keyframes spin {
   to {
     transform: rotate(360deg);
-  }
-}
-
-/* Responsive Overrides */
-@media (max-width: 991px) {
-  .about-hero-card {
-    padding: 24px;
-  }
-  .hero-title {
-    font-size: 2.1rem;
-  }
-  .navbar-toggler-custom {
-    display: block;
-  }
-  .custom-nav-collapse {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background: rgba(8, 15, 11, 0.98);
-    border-bottom: 1px solid var(--border-subtle);
-    padding: 12px;
-  }
-  .custom-nav-links {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  .custom-nav-link {
-    padding: 8px 12px !important;
   }
 }

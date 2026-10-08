@@ -14,20 +14,25 @@ const Navigation = () => {
     <div className="navigation-wrapper">
       <nav className="custom-navbar">
         <div className="container d-flex align-items-center justify-content-between position-relative">
-          <NavLink className="nav-brand-group" to="/">
+          <NavLink
+            className="nav-brand-group"
+            to="/"
+            onClick={() => setShowMenu(false)}
+          >
             <div className="nav-brand-logo">AM</div>
             <span className="nav-brand-text">Alex Markules</span>
           </NavLink>
 
           <button
-            className="navbar-toggler-custom d-md-none"
+            className="navbar-toggler-custom"
             type="button"
             onClick={() => setShowMenu(!showMenu)}
             aria-label="Toggle navigation"
+            aria-expanded={showMenu}
           >
             <svg
-              width="24"
-              height="24"
+              width="20"
+              height="20"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -50,11 +55,7 @@ const Navigation = () => {
             </svg>
           </button>
 
-          <div
-            className={`d-none d-md-block ${
-              showMenu ? "d-block custom-nav-collapse" : ""
-            }`}
-          >
+          <div className={`nav-menu-container ${showMenu ? "is-open" : ""}`}>
             <ul className="custom-nav-links">
               <li>
                 <NavLink
@@ -62,6 +63,7 @@ const Navigation = () => {
                     `custom-nav-link ${isActive ? "active" : ""}`
                   }
                   to="/"
+                  onClick={() => setShowMenu(false)}
                 >
                   Home
                 </NavLink>
@@ -72,6 +74,7 @@ const Navigation = () => {
                     `custom-nav-link ${isActive ? "active" : ""}`
                   }
                   to="/projects"
+                  onClick={() => setShowMenu(false)}
                 >
                   Projects
                 </NavLink>
@@ -82,6 +85,7 @@ const Navigation = () => {
                     `custom-nav-link ${isActive ? "active" : ""}`
                   }
                   to="/resume"
+                  onClick={() => setShowMenu(false)}
                 >
                   Resume
                 </NavLink>
@@ -92,6 +96,7 @@ const Navigation = () => {
                     `custom-nav-link ${isActive ? "active" : ""}`
                   }
                   to="/blog"
+                  onClick={() => setShowMenu(false)}
                 >
                   Blog
                 </NavLink>
@@ -102,6 +107,7 @@ const Navigation = () => {
                     `custom-nav-link ${isActive ? "active" : ""}`
                   }
                   to="/contact"
+                  onClick={() => setShowMenu(false)}
                 >
                   Contact
                 </NavLink>
