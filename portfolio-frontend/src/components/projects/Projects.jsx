@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { Outlet } from "react-router-dom";
 
 class Projects extends Component {
   constructor(props) {
@@ -13,61 +12,80 @@ class Projects extends Component {
 
   componentDidMount() {
     fetch("/projects")
-      .then(res => res.json())
+      .then((res) => res.json())
       .then(
         (result) => {
           this.setState({
             isLoaded: true,
             items: result
           });
-
         },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
         (error) => {
           this.setState({
             isLoaded: true,
-            error: "Failed to load"
+            error: "Failed to load projects"
           });
         }
-      )
+      );
   }
 
   render() {
-
     const { error, isLoaded, items } = this.state;
-    if (error) {
-      return <div>Error: {error}</div>;
-    } else if (!isLoaded) {
-      return <div>Loading...</div>;
-    } else {
-      const rows = [...Array(Math.ceil(items.length / 3))];
-      const projectRows = rows.map((row, idx) => items.slice(idx * 3, idx * 3 + 3));
 
-      return (
-        <div className="container projectsContainer">
-          {
-            projectRows.map(row => (
-              <div className="row">
-                {
-                  row.map(item => (
-                    <div className="col-md-4">
-                    <a href={item.url} className="divLink">
-                      <div key={item.id} className="projectBox card">
-                        <h5 className="card-title">{item.title}</h5>
-                        <div className="card-text">{item.description}</div>
+    return (
+      <div className="projects-page">
+        <div className="container">
+          <div className="page-header">
+            <h1 className="page-title">Projects</h1>
+            <p className="page-subtitle">
+              A selection of web apps, data visualization tools, and machine learning projects.
+            </p>
+          </div>
+
+          {error && (
+            <div className="text-center my-4 p-4" style={{ background: "#180d0d", border: "1px solid #4a1818", borderRadius: "8px", color: "#fca5a5" }}>
+              <h4>Unable to load projects</h4>
+              <p className="m-0" style={{ color: "#f87171" }}>{error}</p>
+            </div>
+          )}
+
+          {!isLoaded && !error && (
+            <div className="loading-pulse-container">
+              <div className="loading-spinner"></div>
+              <p style={{ color: "var(--text-muted)", fontFamily: "var(--font-mono)", fontSize: "0.85rem" }}>Loading projects...</p>
+            </div>
+          )}
+
+          {isLoaded && !error && (
+            <div className="projectsContainer">
+              <div className="row g-3">
+                {items.map((item) => (
+                  <div key={item.id || item.title} className="col-lg-4 col-md-6">
+                    <a
+                      href={item.url}
+                      className="project-card-wrapper"
+                      target={item.url && item.url.startsWith("http") ? "_blank" : "_self"}
+                      rel="noopener noreferrer"
+                    >
+                      <div className="projectBox">
+                        <div className="project-card-top">
+                          <span className="project-card-badge">Project</span>
+                          <h3 className="project-title">
+                            <span>{item.title}</span>
+                            <span className="project-arrow">↗</span>
+                          </h3>
+                        </div>
+                        <p className="project-description">{item.description}</p>
                       </div>
                     </a>
-                    </div>
-                  ))
-                }
+                  </div>
+                ))}
               </div>
-            ))
-          }
+            </div>
+          )}
         </div>
-      );
-    }
+      </div>
+    );
   }
 }
 

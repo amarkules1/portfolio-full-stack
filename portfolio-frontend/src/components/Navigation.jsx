@@ -1,72 +1,117 @@
-import React, { Component } from "react";
-import { NavLink } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { NavLink, useLocation } from "react-router-dom";
 
-class Navigation extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      showMenu: false
-    };
-    this.toggleMenu = this.toggleMenu.bind(this);
-  }
+const Navigation = () => {
+  const [showMenu, setShowMenu] = useState(false);
+  const location = useLocation();
 
-  isMobile(){
-    return window.innerWidth < 768;
-  }
+  useEffect(() => {
+    // Close mobile menu on route change
+    setShowMenu(false);
+  }, [location]);
 
-  toggleMenu(){
-    this.setState({ showMenu: !this.state.showMenu })
-  }
+  return (
+    <div className="navigation-wrapper">
+      <nav className="custom-navbar">
+        <div className="container d-flex align-items-center justify-content-between position-relative">
+          <NavLink className="nav-brand-group" to="/">
+            <div className="nav-brand-logo">AM</div>
+            <span className="nav-brand-text">Alex Markules</span>
+          </NavLink>
 
-  render() {
-    const showMenu = this.state.showMenu;
-    const isMobile = this.isMobile();
-    return (
-      <div className="navigation">
-        <nav className="navbar navbar-expand navbar-dark bg-dark">
-          <div className={"container" + (this.isMobile() ? " navbarContainerMobile" : "")}>
-            <NavLink className="navbar-brand" to="/">
-              Alex Markules
-            </NavLink>
-            <button className={"navbar-toggler" + (this.isMobile() ? " displayToggle" : "")} type="button" onClick={this.toggleMenu}>
-              <span className="navbar-toggler-icon"></span>
-            </button>
-            { (showMenu || !isMobile) && (
-            <div className="collapse navbar-collapse" >
-              <ul className={"navbar-nav ml-auto" + (this.isMobile() ? " mobileMenuUl" : "")}>
-                <li className="nav-item">
-                  <NavLink className="nav-link" to="/">
-                    Home
-                  </NavLink>
-                </li>
-                <li className="nav-item">
-                  <NavLink className="nav-link" to="/contact">
-                    Contact
-                  </NavLink>
-                </li>
-                <li className="nav-item">
-                  <NavLink className="nav-link" to="/blog">
-                    Blog
-                  </NavLink>
-                </li>
-                <li className="nav-item">
-                  <NavLink className="nav-link" to="/resume">
-                    Resume
-                  </NavLink>
-                </li>
-                <li className="nav-item">
-                  <NavLink className="nav-link" to="/projects">
-                    Projects
-                  </NavLink>
-                </li>
-              </ul>
-            </div>
-            )}
+          <button
+            className="navbar-toggler-custom d-md-none"
+            type="button"
+            onClick={() => setShowMenu(!showMenu)}
+            aria-label="Toggle navigation"
+          >
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              {showMenu ? (
+                <>
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </>
+              ) : (
+                <>
+                  <line x1="3" y1="12" x2="21" y2="12" />
+                  <line x1="3" y1="6" x2="21" y2="6" />
+                  <line x1="3" y1="18" x2="21" y2="18" />
+                </>
+              )}
+            </svg>
+          </button>
+
+          <div
+            className={`d-none d-md-block ${
+              showMenu ? "d-block custom-nav-collapse" : ""
+            }`}
+          >
+            <ul className="custom-nav-links">
+              <li>
+                <NavLink
+                  className={({ isActive }) =>
+                    `custom-nav-link ${isActive ? "active" : ""}`
+                  }
+                  to="/"
+                >
+                  Home
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  className={({ isActive }) =>
+                    `custom-nav-link ${isActive ? "active" : ""}`
+                  }
+                  to="/projects"
+                >
+                  Projects
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  className={({ isActive }) =>
+                    `custom-nav-link ${isActive ? "active" : ""}`
+                  }
+                  to="/resume"
+                >
+                  Resume
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  className={({ isActive }) =>
+                    `custom-nav-link ${isActive ? "active" : ""}`
+                  }
+                  to="/blog"
+                >
+                  Blog
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  className={({ isActive }) =>
+                    `custom-nav-link ${isActive ? "active" : ""}`
+                  }
+                  to="/contact"
+                >
+                  Contact
+                </NavLink>
+              </li>
+            </ul>
           </div>
-        </nav>
-      </div>
-    );
-  }
-}
+        </div>
+      </nav>
+    </div>
+  );
+};
 
 export default Navigation;

@@ -1,42 +1,56 @@
-import React, { Component } from "react";
-import { Outlet, Link } from "react-router-dom";
+import React from "react";
+import { Outlet, NavLink, useLocation } from "react-router-dom";
 
-class Resume extends Component {
+const Resume = () => {
+  const location = useLocation();
+  const currentPath = location.pathname;
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            selected: ''
-        };
-    }
-    render() {
-        return (
-            <div className="home">
-                <div className="container">
-                    <h1 className="text-center mt-5">Resume</h1>
-                    <div className="row">
-                        <div className="col-md-4">
-                            <Link to="/resume/work-experience" onClick={() => this.setState({ selected: 'work-experience' })}>
-                                <div className={this.state.selected === 'work-experience' ? 'resumeButton selected' : 'resumeButton'}>Work Experience</div>
-                            </Link>
-                        </div>
-                        <div className="col-md-4">
-                            <Link to="/resume/education" onClick={() => this.setState({ selected: 'education' })}>
-                                <div className={this.state.selected === 'education' ? 'resumeButton selected' : 'resumeButton'}>Education</div>
-                            </Link>
-                        </div>
-                        <div className="col-md-4">
-                            <Link to="/resume/certs-skills" onClick={() => this.setState({ selected: 'certs-skills' })}>
-                                <div className={this.state.selected === 'certs-skills' ? 'resumeButton selected' : 'resumeButton'}>Certifications and Skills</div>
-                            </Link>
-                        </div>
-                    </div>
+  return (
+    <div className="resume-page">
+      <div className="container">
+        <div className="page-header">
+          <h1 className="page-title">Resume</h1>
+          <p className="page-subtitle">
+            Background in data engineering, data science, and software development.
+          </p>
+        </div>
 
-                    <Outlet />
-                </div>
-            </div>
-        );
-    }
-}
+        {/* Tab Navigation */}
+        <div className="resume-nav-tabs">
+          <NavLink
+            to="/resume/work-experience"
+            className={
+              currentPath === "/resume" || currentPath === "/resume/" || currentPath.includes("work-experience")
+                ? "resumeButton selected"
+                : "resumeButton"
+            }
+          >
+            Work Experience
+          </NavLink>
+
+          <NavLink
+            to="/resume/education"
+            className={({ isActive }) =>
+              isActive ? "resumeButton selected" : "resumeButton"
+            }
+          >
+            Education
+          </NavLink>
+
+          <NavLink
+            to="/resume/certs-skills"
+            className={({ isActive }) =>
+              isActive ? "resumeButton selected" : "resumeButton"
+            }
+          >
+            Certifications & Skills
+          </NavLink>
+        </div>
+
+        <Outlet />
+      </div>
+    </div>
+  );
+};
 
 export default Resume;
