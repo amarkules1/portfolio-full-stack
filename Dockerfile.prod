@@ -23,6 +23,10 @@ COPY main.py .
 # Copy portfolio-frontend/build directory to the same in the container
 COPY portfolio-frontend/build portfolio-frontend/build
 
+# Create directory and declare volume for external projects
+RUN mkdir -p /app/projects
+VOLUME ["/app/projects"]
+
 # Expose port 443
 EXPOSE 443
 
