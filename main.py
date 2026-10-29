@@ -2,7 +2,8 @@ import json
 import os
 
 import cachetools
-from flask import Flask, redirect, render_template, request, url_for, flash, jsonify
+from flask import Flask, redirect, render_template, request, url_for, flash, jsonify, send_from_directory, abort
+from werkzeug.utils import safe_join
 import pandas as pd
 import sqlalchemy
 from sqlalchemy import sql
@@ -13,6 +14,18 @@ from flask_login import LoginManager, UserMixin, login_user, logout_user, login_
 
 app = Flask(__name__, static_folder='portfolio-frontend/build', static_url_path='', template_folder='templates')
 CORS(app)
+
+BASE_DIR = os.path.abspath(os.path.dirname(__file__)) if '__file__' in globals() else os.getcwd()
+PROJECTS_DIR = os.getenv('PROJECTS_DIR')
+if not PROJECTS_DIR:
+    if os.path.isdir('/app/projects'):
+        PROJECTS_DIR = '/app/projects'
+    elif os.path.isdir(os.path.join(BASE_DIR, 'projects')):
+        PROJECTS_DIR = os.path.join(BASE_DIR, 'projects')
+    elif os.path.isdir(os.path.join(BASE_DIR, '..', 'projects')):
+        PROJECTS_DIR = os.path.join(BASE_DIR, '..', 'projects')
+    else:
+        PROJECTS_DIR = os.path.join(BASE_DIR, 'projects')
 
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev-secret-key')
 
@@ -46,6 +59,18 @@ def hello():
 @app.route("/projects", methods=['GET'])
 def projects():
     return get_response()
+
+
+@app.route('/projects/<path:subpath>')
+def serve_projects(subpath):
+    target = safe_join(PROJECTS_DIR, subpath)
+    if target and os.path.isdir(target):
+        if not request.path.endswith('/'):
+            return redirect(request.path + '/', code=302)
+        return send_from_directory(target, 'index.html')
+    if target and os.path.isfile(target):
+        return send_from_directory(PROJECTS_DIR, subpath)
+    abort(404)
 
 @app.route("/march-madness-2025", methods=['GET'])
 def get_march_madness():
@@ -200,6 +225,19 @@ def delete_blog_post(post_id):
         blog_posts_cache.clear()
         flash('Blog post deleted successfully!')
     return redirect(url_for('dashboard'))
+
+
+@app.errorhandler(404)
+def handle_404(e):
+    path = request.path.lstrip('/')
+    target = safe_join(PROJECTS_DIR, path)
+    if target and os.path.isdir(target):
+        if not request.path.endswith('/'):
+            return redirect(request.path + '/', code=302)
+        return send_from_directory(target, 'index.html')
+    if target and os.path.isfile(target):
+        return send_from_directory(PROJECTS_DIR, path)
+    return e, 404
 
 
 if __name__ == '__main__':
