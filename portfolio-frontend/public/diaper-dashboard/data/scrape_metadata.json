@@ -1,0 +1,88 @@
+{
+  "last_scraped": "2026-11-19T21:48:06-05:00",
+  "total_skus": 907,
+  "total_brands": 15,
+  "stores_scraped": [
+    "Meijer",
+    "Target",
+    "Costco",
+    "Walmart",
+    "Sam's Club",
+    "Kroger",
+    "Amazon"
+  ],
+  "store_probes": {
+    "Meijer": {
+      "store": "Meijer",
+      "url": "https://www.meijer.com/shopping/search.html?text=baby+diapers",
+      "http_status": 403,
+      "reachable": true,
+      "live_prices_detected": [],
+      "response_ms": 189,
+      "scrape_mode": "live_hybrid"
+    },
+    "Target": {
+      "store": "Target",
+      "url": "https://www.target.com/s?searchTerm=baby+diapers",
+      "http_status": 200,
+      "reachable": true,
+      "live_prices_detected": [],
+      "response_ms": 535,
+      "scrape_mode": "live_hybrid"
+    },
+    "Costco": {
+      "store": "Costco",
+      "url": "https://www.costco.com/CatalogSearch?dept=All&keyword=baby+diapers",
+      "http_status": 200,
+      "reachable": true,
+      "live_prices_detected": [],
+      "response_ms": 1032,
+      "scrape_mode": "live_hybrid"
+    },
+    "Walmart": {
+      "store": "Walmart",
+      "url": "https://www.walmart.com/search?q=baby+diapers",
+      "http_status": 200,
+      "reachable": true,
+      "live_prices_detected": [
+        43.15,
+        49.94,
+        43.15,
+        49.94,
+        49.94,
+        24.97,
+        29.97,
+        24.97
+      ],
+      "response_ms": 2640,
+      "scrape_mode": "live_hybrid"
+    },
+    "Sam's Club": {
+      "store": "Sam's Club",
+      "url": "https://www.samsclub.com/s/baby+diapers",
+      "http_status": 200,
+      "reachable": true,
+      "live_prices_detected": [],
+      "response_ms": 672,
+      "scrape_mode": "live_hybrid"
+    },
+    "Kroger": {
+      "store": "Kroger",
+      "url": "https://www.kroger.com/search?query=baby+diapers",
+      "http_status": null,
+      "reachable": false,
+      "live_prices_detected": [],
+      "response_ms": 4616,
+      "scrape_mode": "catalog_live_fallback"
+    },
+    "Amazon": {
+      "store": "Amazon",
+      "url": "https://www.amazon.com/s?k=baby+diapers",
+      "http_status": 200,
+      "reachable": true,
+      "live_prices_detected": [],
+      "response_ms": 333,
+      "scrape_mode": "live_hybrid"
+    }
+  }
+}
